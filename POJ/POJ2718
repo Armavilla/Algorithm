@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+
+int m,num=0,res=999999;
+int input[10];
+int s1=0,s2=0,i=0;
+
+int solve(){
+    int k1=num/2;
+    int k2=num-k1;
+    if (num==2)
+    {
+        res=abs(input[0]-input[1]);
+    }
+    do  
+    {
+        s1=0,s2=0;
+        if (input[0]==0||input[k1]==0)
+        {
+            continue;
+        }
+        for (int i = 0; i < k1; i++)
+        {
+            s1=10*s1+input[i];
+        }
+        for (int j = k1; j < num; j++)
+        {
+            s2=10*s2+input[j];
+        }
+        res=min(res,abs(s1-s2));
+    }while (next_permutation(input,input+num));
+    return 0;
+}
+
+int main(){
+    scanf("%d",&m);
+    for (getchar(); i < m; i++)
+    {
+        res=999999;
+        char c;
+        num = 0;
+        memset(input ,0 ,sizeof(input));
+        while ((c=getchar())!='\n')
+        {
+            if (c!=' ')
+            {
+                input[num++]=c-'0';
+            }   
+        }
+        solve();
+        printf("%d\n",res);
+    }
+    return 0;
+}
