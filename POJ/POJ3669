@@ -1,0 +1,93 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <cstring>
+#include <stdio.h>
+using namespace std;
+ 
+#define INDEX_MAX 512
+int G[INDEX_MAX][INDEX_MAX];
+bool marked[INDEX_MAX][INDEX_MAX];
+struct Meteor
+{
+	int x, y, t;
+};
+typedef Meteor P;
+ 
+Meteor m[50008];
+int n;
+int dx[]={-1,0,1,0,0};
+int dy[]={0,1,0,-1,0};
+const int direction[5][2] = {
+	{ -1, 0 },
+	{ 1, 0 },
+	{ 0, -1 },
+	{ 0, 1 },
+	{ 0, 0 },
+};
+ 
+int last;
+ 
+int bfs(){
+    memset(marked, 0, sizeof(marked));
+    queue<P> que;
+    P cur;
+    cur.x=0;
+    cur.y=0;
+    cur.t=0;
+    que.push(cur);
+    while (que.size())
+    {
+        const P p = que.front();que.pop();
+        for (int i = 0; i < 4; i++)
+        {
+            cur=p;
+            cur.x=cur.x+dx[i];
+            cur.y=cur.y+dy[i];
+            cur.t++;
+            if (cur.x>=0&&cur.y>=0&&cur.t<G[cur.x][cur.y]&&!marked[cur.x][cur.y])
+            {
+                marked[cur.x][cur.y]=true;
+                if (G[cur.x][cur.y]>last)
+                {
+                    return cur.t;
+                }
+                que.push(cur);
+            }
+        }
+    }
+    return -1;
+}
+ 
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; ++i)
+	{
+		scanf("%d%d%d",&m[i].x,&m[i].y,&m[i].t);
+	}
+
+	memset(G, 0x7F, sizeof(G));
+	for (int i = 0; i < n; ++i)
+	{
+		last = max(last, m[i].t);
+		for (int j = 0; j < 5; ++j)
+		{
+			int nx = m[i].x + dx[j];
+			int ny = m[i].y + dy[j];
+			if (nx >= 0 && ny >= 0 && G[nx][ny] > m[i].t)
+			{
+				G[nx][ny] = m[i].t;
+			}
+		}
+	}
+	if (G[0][0] == 0)
+	{
+		printf("%d",-1);
+	}
+	else
+	{
+		printf("%d",bfs());
+	}
+	return 0;
+}
