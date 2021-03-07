@@ -1,0 +1,64 @@
+#include<iostream>
+#include<algorithm>
+#include<stdio.h>
+#include<queue>
+using namespace std;
+
+int n,num=1;
+struct interval
+{
+    int l,r,pos;
+    bool operator <(const interval &a)const
+    {
+        if (r==a.r)
+        {
+            return l>a.l;
+        }
+        return r>a.r;
+    }
+};
+
+interval cow[50005];
+interval stall[50005];
+int sit[50005];
+priority_queue<interval> q;
+
+bool cmp(interval a,interval b){
+    if (a.l==b.l)
+    {
+        return a.r<b.r;
+    }
+    return a.l<b.l;
+}
+
+int main(){
+    scanf("%d",&n);
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d%d",&cow[i].l,&cow[i].r);
+        cow[i].pos=i;
+    }
+    sort(cow,cow+n,cmp);
+    q.push(cow[0]);
+    sit[cow[0].pos]=1;
+    for (int i = 1; i < n; i++)
+    {
+        if (!q.empty()&&q.top().r<cow[i].l)
+        {
+            sit[cow[i].pos]=sit[q.top().pos];
+            q.pop();
+        }
+        else
+        {
+            num++;
+            sit[cow[i].pos]=num;
+        }
+        q.push(cow[i]);
+    }
+    printf("%d\n",num);
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d\n",sit[i]);
+    }
+    return 0;
+}
