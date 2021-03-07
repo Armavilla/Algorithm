@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int m,n,ans;
+int dp[1005][1005];
+int a[1005];
+
+int main(){
+    scanf("%d%d",&m,&n);
+    for (int i = 1; i <= m; i++)
+    {
+        scanf("%d",&a[i]);
+    }
+    if (a[1]==1)
+    {
+        dp[1][0]=1;
+    }
+    if (a[1]==2)
+    {
+        dp[1][1]=1;
+    }
+    
+    for (int i = 2; i <= m; i++)
+    {
+        for (int j = 0; j <= n; j++)
+        {
+            if (j==0)
+            {
+                dp[i][j]=dp[i-1][j]+a[i]%2;
+            }
+            dp[i][j]=max(dp[i-1][j],dp[i-1][j-1]);
+            if (j%2+1==a[i])
+            {
+                dp[i][j]++;
+            }   
+        }
+    }
+    printf("%d",dp[m][n]);    
+}
