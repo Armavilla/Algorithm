@@ -1,0 +1,84 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<stdio.h>
+#include<cstring>
+using namespace std;
+
+int n,d,ans=0,num=0;
+typedef pair<float,float> interval;
+interval p[1005];
+interval radar[1005];
+
+int getpoint(int x,int y,interval &temp){
+    temp.first=x-sqrt((float)(d*d-y*y));
+    temp.second=x+sqrt((float)(d*d-y*y));
+    return 0;
+}
+
+
+
+int solve(){
+    interval temp;
+    for (int i = 0; i < n; i++)
+    {
+        if (p[i].second<0||p[i].second>d||d<0)
+        {
+            ans=-1;
+            return 0;
+        }
+        getpoint(p[i].first,p[i].second,temp); 
+        radar[i]=temp;
+    }
+    sort(radar,radar+n);
+    double right;
+    for (int i = 0; i < n; i++)
+    {
+        if (i==0)
+        {
+            ans++;
+            right=radar[i].second;
+        }
+        else
+        {
+            if (radar[i].first<=right)
+            {
+                if (radar[i].second<right)
+                {
+                    right=radar[i].second;
+                }
+                continue;
+            }
+            else
+            {
+                ans++;
+                right=radar[i].second;
+            }
+        }
+    }
+    return 0;
+}
+
+int main(){
+    int ix,iy;
+    while (true)
+    {    
+        num++;
+        ans=0;
+        memset(p,0,sizeof(p));
+        memset(radar,0,sizeof(radar));
+        scanf("%d%d",&n,&d);
+        if (n==0&&d==0)
+        {
+            break;
+        }
+        for (int i = 0; i < n; i++)
+        {
+            scanf("%d%d",&ix,&iy);
+            p[i].first=ix;p[i].second=iy;
+        }
+        solve();
+        printf("Case %d: %d\n",num,ans);
+    }
+    return 0;
+}
