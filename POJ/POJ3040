@@ -1,0 +1,91 @@
+#include<stdio.h>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#define INF 0x3f3f3f3f
+using namespace std;
+
+ struct coin
+ {
+     int price;
+     int num;
+ };
+int n,c,week;
+coin p[22];
+int use[22];
+
+bool cmp(coin a,coin b){
+    return a.price>b.price;
+}
+
+int main(){
+    scanf("%d%d",&n,&c);
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d%d",&p[i].price,&p[i].num);
+    }
+    sort(p,p+20,cmp);
+    for (int i = 0; i < n; i++)
+    {
+        if (p[i].price>=c)
+        {
+            week+=p[i].num;
+            p[i].num=0;
+        }
+    }
+    while (true)
+    {
+        int sum = c;
+        memset(use,0,sizeof(use));
+        for (int i = 0; i < n; i++)
+        {
+            if (p[i].num>0)
+            {
+                use[i]=min(p[i].num,sum/p[i].price);
+                sum -= use[i]*p[i].price;
+                if (sum==0)
+                {
+                    break;
+                }
+            }
+        }
+        if (sum>0)
+        {
+            for (int i = n-1; i > 0; i--)
+            {
+                while (p[i].num>use[i])
+                {
+                    use[i]++;
+                    sum -= p[i].price;
+                    if (sum<=0)
+                    {
+                        break;
+                    }                
+                }
+                if (sum<=0)
+                {
+                    break;
+                }
+            }
+        }
+        if (sum>0)
+        {
+            break;
+        }
+        int minn=INF;
+        for (int i = 0; i < n; i++)
+        {
+            if (use[i]>0)
+            {
+                minn=min(minn,p[i].num/use[i]);
+            }
+        }
+        for (int i = 0; i < n; i++)
+        {
+            p[i].num -= minn*use[i];
+        }
+        week += minn;
+    }
+    printf("%d",week);
+    return 0;
+}
