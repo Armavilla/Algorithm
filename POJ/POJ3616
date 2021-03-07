@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+using namespace std;
+
+struct interval
+{
+    int first;
+    int second;
+    int eff;
+};
+
+interval p[1005];
+int N,M,R,ans;
+int dp[1005];
+
+bool cmp (interval p1,interval p2){
+    if (p1.first==p2.first)
+    {
+        return p1.second<p2.second;
+    }
+    return p1.first<p2.first;
+}
+
+int main(){
+    scanf("%d%d%d",&N,&M,&R);
+    for (int i = 0; i < M; i++)
+    {
+        scanf("%d%d%d",&p[i].first,&p[i].second,&p[i].eff);
+    }
+    sort(p,p+M,cmp);
+    for (int i = 0; i < M; i++)
+    {
+        dp[i]=p[i].eff;
+        for (int j = 0; j < i; j++)
+        {
+            if (p[i].first >= p[j].second+R)
+            {
+                dp[i]=max(dp[i],dp[j]+p[i].eff);
+            }
+        }
+    }
+    for (int i = 0; i < M; i++)
+    {
+        ans=max(ans,dp[i]);
+    }
+    
+    printf("%d",ans);
+    return 0;
+}
