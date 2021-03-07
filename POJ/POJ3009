@@ -1,0 +1,93 @@
+#include <stdio.h>
+
+bool fid=false;
+bool win=false;
+int G[20][20];
+int dx[]={-1,0,1,0};
+int dy[]={0,1,0,-1};
+int result,ans;
+int sx,sy,gx,gy,w,h;
+
+bool goon(int x,int y){
+    if(0<=x&&x<h&&0<=y&&y<w){ return true;}
+    else{ return false;}
+}
+void dfs(int x,int y,int step){
+    step++;
+    if (step>10)
+    {
+        return;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        int nx=x+dx[i];
+        int ny=y+dy[i];
+        if (!goon(nx,ny)||G[nx][ny]==1)
+        {
+            continue;
+        }
+        while (goon(nx,ny)&&G[nx][ny]!=1)
+        {   
+            if (nx==gx&&ny==gy)
+            {
+                win=true;
+                if(step<result){ result=step;}
+                return;
+            }
+            nx=nx+dx[i];
+            ny=ny+dy[i];
+        }
+        if (goon(nx,ny)&&G[nx][ny]==1)
+        {
+            G[nx][ny]=0;
+            dfs(nx-dx[i],ny-dy[i],step);
+            G[nx][ny]=1;
+        }
+    }
+}
+
+void solve(){
+    int i,j;
+    result=10,ans=0;
+    fid=false,win=false;
+    for (i = 0; i < h; i++)
+    {
+        for (j = 0; j < w; j++)
+        {
+            if (G[i][j]==2)
+            {
+                sx=i;
+                sy=j;
+            }
+             if (G[i][j]==3)
+            {
+                gx=i;
+                gy=j;
+            }
+        }
+    }
+    G[sx][sy]=0;
+    dfs(sx,sy,ans);
+}
+int main(){
+    while (scanf("%d%d",&w,&h)==2&&(w||h))
+    {   
+        for (int i = 0; i < h; i++)
+        {
+            for (int j = 0; j < w; j++)
+            {
+                scanf("%d",&G[i][j]);
+            }
+        }
+        solve();
+        if (win)
+        {
+            printf("%d\n",result);
+        }
+        else
+        {
+            printf("%d\n",-1);
+        }
+    }  
+    return 0;
+}
